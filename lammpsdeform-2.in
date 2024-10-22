@@ -1,0 +1,67 @@
+log nemd.log append
+
+units           real
+atom_style      full
+pair_style      lj/cut/coul/long 12.0  12.0 
+kspace_style    pppm 1e-4
+bond_style      harmonic
+angle_style     harmonic
+dihedral_style  fourier
+improper_style  cvff
+special_bonds   amber
+pair_modify     mix arithmetic 
+read_data 		./eq2.data 
+
+replicate 2 2 2
+
+restart 100000 rstrt_3 rstrt_4 
+
+timestep        0.25
+
+neighbor    2.5 bin 
+neigh_modify	delay 0 every 50 check no 
+
+timestep        0.25
+thermo 10000
+thermo_style custom step temp epair emol etotal press density vol lx ly lz
+fix 	FORM all deform 1 x scale 2.00 y volume z volume remap v
+fix 	NVT1 all nvt/sllod temp 300.0 300.0 1.0
+run 	5000000
+unfix 	NVT1
+unfix 	FORM
+fix 	NVE1 all nve 
+run 	5000000
+unfix 	NVE1
+
+timestep        0.25
+dump 1 all xyz 400000 P522013.xyz 
+
+
+region rqin block $((xlo+xhi)/2-56.8) $((xlo+xhi)/2-51.8) INF INF INF INF units box
+region rqout block $((xlo+xhi)/2+51.8) $((xlo+xhi)/2+56.8) INF INF INF INF units box
+region rfree block $((xlo+xhi)/2-56.8) $((xlo+xhi)/2+56.8) INF INF INF INF units box
+group gin dynamic all region rqin
+group gout dynamic all region rqout
+group gfree region rfree
+
+
+#################### NEME Calculation #####################
+
+fix NVE gfree nve
+reset_timestep 0
+
+compute ke gfree ke/atom
+variable temp atom c_ke/0.003
+
+variable OneOverNumBins equal 1.0/(round((xhi-xlo)/1.2))
+compute xbin all chunk/atom bin/1d x center ${OneOverNumBins} units reduced
+fix 1 all ave/chunk 1 2000000 2000000 xbin v_temp norm all ave one file P522013.profile 
+
+fix 4 gin langevin 320 320 100.0 123456 tally yes
+fix 5 gout langevin 280 280 100.0 123457 tally yes
+
+thermo 10000
+thermo_style custom step temp epair emol etotal press density vol lx ly lz f_4 f_5
+thermo_modify flush yes
+
+run 20000000
