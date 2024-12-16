@@ -29,6 +29,8 @@ This repository provides the code for:
   pip install notebook
   ```
 - **LAMMPS**: A molecular dynamics simulator. Refer to the [LAMMPS installation guide](https://www.lammps.org/doc/Install.html) for setup instructions.
+- - **PySimm**: A Python library for molecular simulations. Refer to the [PySimm documentation](https://pysimm.org/) for installation and usage instructions.
+
 ### Required Python Packages
 Ensure the following packages are installed in your environment:
 - `mol2vec`
