@@ -86,7 +86,7 @@ Use the commands provided in the [Prerequisites](#prerequisites) section to set 
 ## Instructions for Running the MD Simulations
 
 ### Prepare the Polymer Data File
-- The file **`amorphous_polymer_P522013.lmps`** contains the data for the amorphous polymer generated using PySimm.
+- The file **`amorphous_polymer_P522013.lmps`** contains the data for the amorphous polymer generated using [PySimm](https://pysimm.org/).
 
 ### Run the Equilibrium Simulation
 - Use **`lammps-2.in`** to equilibrate the amorphous polymer. Run the following command:
