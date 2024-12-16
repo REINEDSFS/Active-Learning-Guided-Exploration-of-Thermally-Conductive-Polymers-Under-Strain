@@ -28,6 +28,7 @@ This repository provides the code for:
   ```bash
   pip install notebook
   ```
+- **LAMMPS**: A molecular dynamics simulator. Refer to the [LAMMPS installation guide](https://www.lammps.org/doc/Install.html) for setup instructions.
 ### Required Python Packages
 Ensure the following packages are installed in your environment:
 - `mol2vec`
@@ -45,10 +46,6 @@ You can install them using:
 ```bash
 pip install mol2vec rdkit scikit-learn numpy pandas matplotlib seaborn tqdm scipy
 ```
-
-## Additional Software
-
-- **LAMMPS**: A molecular dynamics simulator. Refer to the [LAMMPS installation guide](https://www.lammps.org/doc/Install.html) for setup instructions.
 
 ---
 
