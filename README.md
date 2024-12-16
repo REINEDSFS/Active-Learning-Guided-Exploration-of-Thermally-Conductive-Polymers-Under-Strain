@@ -1,66 +1,97 @@
-# **Active Learning-Guided Exploration of Thermally Conductive Polymers Under Strain**
+# Active Learning-Guided Exploration of Thermally Conductive Polymers Under Strain
 
-This repository contains an open source implementation of the Gaussian Process Regression model and corresponding dataset described in our paper. 
+This repository contains the code and data for the paper "*Active Learning-Guided Exploration of Thermally Conductive Polymers Under Strain*". The goal is to enable researchers to reproduce the results presented in the work and utilize the tools for further exploration.
 
- # **_Abstract_**
+---
 
-Finding amorphous polymers with higher thermal conductivity (TC) is technologically important, as they are ubiquitous in applications where heat transfer is crucial. While TC is generally low in amorphous polymers, it can be enhanced by mechanical strain, which facilitates the alignment of polymer chains. However, using the conventional Edisonian approach, the discovery of polymers that may have high TC after strain can be time-consuming and without the guarantee of success. In this work, we employ an active learning scheme to speed up the discovery of amorphous polymers with high TC under strain. Polymers under 2x strain are simulated using molecular dynamics (MD), and their TCs are calculated using non-equilibrium MD. A Gaussian Process Regression (GPR) model is then built using these MD data as the training set. The GPR model is used to screen the PoLyInfo database, and the predicted mean TC and uncertainty are used towards an acquisition function to recommend new polymers for labeling via Bayesian Optimization. The TC of these selected polymers are then labeled using MD simulations, and the obtained data are incorporated to rebuild the GPR model, initiating a new iteration of the active learning cycle. Over a few cycles, we identified ten strained polymers with significantly higher TC (>1 W/mK) than the original dataset, and the results offer valuable insights into the structural characteristics favorable for achieving high TC of polymers subject to strain.
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Prerequisites](#prerequisites)
+3. [Files in the Repository](#files-in-the-repository)
+4. [How to Run the Jupyter Notebook](#how-to-run-the-jupyter-notebook)
+5. [Instructions for Running the MD Simulations](#instructions-for-running-the-md-simulations)
 
+---
 
- # **_Dataset_**
+## Introduction
 
-36 polymers are  randomly selected from PoLyInfo to label using MD as the initial dataset. The following figure shows the 36 polymers TC before (blue) and after strain (red). You can find the 36 initail MD-labeled TC in initial training set csv file.
+This repository provides the code for:
+- Active learning workflows implemented using Gaussian Process Regression (GPR) for discovering polymers with high thermal conductivity (TC) under strain.
+- Molecular Dynamics (MD) simulations performed using LAMMPS to compute polymer thermal conductivity.
 
-<img width="769" alt="Screenshot 2024-08-17 at 2 22 06 PM" src="https://github.com/user-attachments/assets/d882d8e0-68d5-4cf9-9ca6-09492cd2df8a">
+---
 
-# Simulation Workflow
+## Prerequisites
 
-This project utilizes **LAMMPS** for molecular dynamics simulations and **PySimm** for generating amorphous polymer structures. Follow the steps below to set up and run the simulations.
+### Required Python Packages
+Ensure the following packages are installed in your environment:
+- `mol2vec`
+- `rdkit`
+- `scikit-learn`
+- `numpy`
+- `pandas`
+- `matplotlib`
+- `seaborn`
+- `tqdm`
+- `scipy`
+- `csv`
 
-## 1. Clone the Repository
-
-Begin by cloning the project repository from GitHub:
-
+You can install them using:
 ```bash
-git clone https://github.com/REINEDSFS/Active-Learning-Guided-Exploration-of-Thermally-Conductive-Polymers-Under-Strain.git
+pip install mol2vec rdkit scikit-learn numpy pandas matplotlib seaborn tqdm scipy
 ```
-## 2. Install Dependencies
 
-Ensure that the following software is installed on your system:
+## Additional Software
 
-- **LAMMPS**: A molecular dynamics simulator. [Installation instructions](https://www.lammps.org/doc/Install.html)
-- **PySimm**: A Python library for molecular simulations. Install it using pip:
+- **LAMMPS**: A molecular dynamics simulator. Refer to the [LAMMPS installation guide](https://www.lammps.org/doc/Install.html) for setup instructions.
 
+---
+
+## Files in the Repository
+
+### Jupyter Notebook
+- **`Active_Learning_Workflow.ipynb`**:
+  - This notebook implements the active learning workflow described in the paper.
+  - It includes:
+    - GPR model training.
+    - Bayesian Optimization.
+    - Data visualization.
+
+### LAMMPS Files
+- **`amorphous_polymer_P522013.lmps`**: LAMMPS data file for the amorphous polymer used in simulations.
+- **`lammps-2.in`**: LAMMPS input script for equilibrating the amorphous polymer.
+- **`lammpsdeform-2.in`**: LAMMPS input script for applying strain and computing thermal conductivity via Non-Equilibrium Molecular Dynamics (NEMD).
+
+---
+
+## How to Run the Jupyter Notebook
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/REINEDSFS/Active-Learning-Guided-Exploration-of-Thermally-Conductive-Polymers-Under-Strain.git
+   cd Active-Learning-Guided-Exploration-of-Thermally-Conductive-Polymers-Under-Strain
+   ```
+2. **Install the Required Packages**:
+Use the commands provided in the [Prerequisites](#prerequisites) section to set up the required environment.
+3. **Run the Notebook**:
+   Open the notebook using the following command:
+   ```bash
+   jupyter notebook Active_Learning_Workflow.ipynb
+   ```
+   
+## Instructions for Running the MD Simulations
+
+### Prepare the Polymer Data File
+- The file **`amorphous_polymer_P522013.lmps`** contains the data for the amorphous polymer generated using PySimm.
+
+### Run the Equilibrium Simulation
+- Use **`lammps-2.in`** to equilibrate the amorphous polymer. Run the following command:
   ```bash
-  pip install pysimm
+  lmp_mpi -in lammps-2.in
   ```
-## 3. Generate the Amorphous Polymer Structure
+### Run the Deformation Simulation
+- Use lammpsdeform-2.in to apply strain and calculate thermal conductivity. Run the following command:
+  ```bash
+  lmp_mpi -in lammpsdeform-2.in
+  ```
 
-Utilize **PySimm** to generate the amorphous polymer structure. The input file (`polymer.data`) required by `lammps.in` is generated using PySimm. Refer to the [PySimm Documentation](https://pysimm.org/) for detailed instructions.
-
-## 4. Prepare Simulation Input Files
-
-The repository includes two LAMMPS input files:
-
-- `lammps.in`: For equilibrium simulations.
-- `lammpsdeform.in`: For applying strain and performing Non-Equilibrium Molecular Dynamics (NEMD) calculations.
-
-Ensure that the `polymer.data` file generated by PySimm is in the same directory as `lammps.in`, or update the file paths in the input scripts accordingly.
-
-## 5. Run the Equilibrium Simulation
-
-Execute the equilibrium simulation using LAMMPS:
-
-```bash
-lmp_mpi -in lammps.in
-```
-## 6. Apply Strain and Perform NEMD Calculations
-After completing the equilibrium simulation, run the deformation simulation:
-
-``` bash
-lmp_mpi -in lammpsdeform.in
-```
-
- # **_Note_**
-
-Code and data for academic purpose only.
