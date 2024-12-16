@@ -1,4 +1,4 @@
-# Active Learning-Guided Exploration of Thermally Conductive Polymers Under Strain
+# [Active Learning-Guided Exploration of Thermally Conductive Polymers Under Strain](https://an-xu.github.io/AL-TCpolymer.github.io/)
 
 This repository contains the code and data for the paper "*Active Learning-Guided Exploration of Thermally Conductive Polymers Under Strain*". The goal is to enable researchers to reproduce the results presented in the work and utilize the tools for further exploration.
 
@@ -22,7 +22,12 @@ This repository provides the code for:
 ---
 
 ## Prerequisites
-
+### Required Software
+- **Python**: Version 3.10 or above.
+- **Jupyter Notebook**: For running the interactive notebook. Install via pip:
+  ```bash
+  pip install notebook
+  ```
 ### Required Python Packages
 Ensure the following packages are installed in your environment:
 - `mol2vec`
